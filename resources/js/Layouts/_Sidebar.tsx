@@ -1,6 +1,7 @@
 import AppLogo from "./AppLogo";
 import { RiSettings2Fill } from "react-icons/ri";
 import { FiUsers } from "react-icons/fi";
+import { Link } from "@inertiajs/react";
 
 export default function Sidebar() {
     return (
@@ -104,13 +105,13 @@ export default function Sidebar() {
                                         data-hs-accordion-always-open
                                     >
                                         <li>
-                                            <a
+                                            <Link
                                                 className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 dark:text-slate-200 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-400 focus:outline-none focus:dark:text-white"
-                                                href="#"
+                                                href={route('accounts.index')}
                                             >
                                                 <FiUsers />
-                                                Users
-                                            </a>
+                                                Accounts
+                                            </Link>
                                         </li>
                                         <li
                                             className="hs-accordion"

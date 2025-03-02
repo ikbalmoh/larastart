@@ -1,5 +1,6 @@
 import defaultTheme from "tailwindcss/defaultTheme";
 import forms from "@tailwindcss/forms";
+import { heroui } from "@heroui/react";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -9,7 +10,10 @@ export default {
         "./resources/views/**/*.blade.php",
         "./resources/js/**/*.tsx",
         "./node_modules/preline/preline.js",
+        "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
     ],
+
+    darkMode: "class",
 
     theme: {
         extend: {
@@ -19,5 +23,5 @@ export default {
         },
     },
 
-    plugins: [forms, require("preline/plugin")],
+    plugins: [forms, require("preline/plugin"), heroui()],
 };

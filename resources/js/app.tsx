@@ -5,6 +5,7 @@ import "preline/preline";
 import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot, hydrateRoot } from "react-dom/client";
+import { HeroUIProvider } from "@heroui/react";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -17,11 +18,20 @@ createInertiaApp({
         ),
     setup({ el, App, props }) {
         if (import.meta.env.SSR) {
-            hydrateRoot(el, <App {...props} />);
+            hydrateRoot(
+                el,
+                <HeroUIProvider>
+                    <App {...props} />
+                </HeroUIProvider>
+            );
             return;
         }
 
-        createRoot(el).render(<App {...props} />);
+        createRoot(el).render(
+            <HeroUIProvider>
+                <App {...props} />
+            </HeroUIProvider>
+        );
     },
     progress: {
         color: "#4B5563",

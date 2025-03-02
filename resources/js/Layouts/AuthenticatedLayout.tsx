@@ -3,7 +3,7 @@ import { PropsWithChildren, ReactNode, useEffect } from "react";
 import Header from "./_Header";
 import Sidebar from "./_Sidebar";
 
-export default function Authenticated({ children }: PropsWithChildren) {
+export default function AuthenticatedLayout({ children }: PropsWithChildren) {
     const user = usePage().props.auth.user;
 
     useEffect(() => {
