@@ -1,28 +1,13 @@
 import React, { SVGProps } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps } from "@/types";
-import { Head, Link, router } from "@inertiajs/react";
-import { User as UserModel } from "@/types/user";
-import {
-    Table,
-    TableHeader,
-    TableColumn,
-    TableBody,
-    TableRow,
-    TableCell,
-    User,
-    Chip,
-    Tooltip,
-    ChipProps,
-    Dropdown,
-    DropdownTrigger,
-    Button,
-    Pagination,
-} from "@heroui/react";
-
-export type IconSvgProps = SVGProps<SVGSVGElement> & {
-    size?: number;
-};
+import { Head, router } from "@inertiajs/react";
+import { Role, User as UserModel } from "@/types/user";
+import { Button, Chip, useDisclosure } from "@heroui/react";
+import Table from "@/Components/Table";
+import { Pagination as IPagination } from "@/types/pagination";
+import { AiOutlinePlus } from "react-icons/ai";
+import AccountFormModal from "./_AccountFormModal";
 
 export const columns = [
     { name: "NAME", uid: "name" },
@@ -32,27 +17,13 @@ export const columns = [
     { name: "ACTIONS", uid: "actions" },
 ];
 
-export default function AccountsPage({
-    accounts,
-}: PageProps<{ accounts: Pagination<UserModel> }>) {
-    const classNames = React.useMemo(
-        () => ({
-            wrapper: ["max-h-[382px]", "max-w-3xl"],
-            table: [
-                "min-w-full divide-y divide-gray-200 dark:divide-neutral-700",
-            ],
-            // thead: ["bg-gray-50", "dark:bg-neutral-800"],
-            tbody: ["divide-y divide-gray-200 dark:divide-neutral-700"],
-            th: [
-                "ps-6 pe-6 py-3 text-start",
-                "bg-gray-50",
-                "dark:bg-neutral-800",
-                "text-default-500",
-            ],
-            td: ["ps-6 pe-6 py-3 text-sm text-gray-500 dark:text-neutral-500"],
-        }),
-        []
-    );
+export type AccountsPageProps = PageProps<{
+    accounts: IPagination<UserModel>;
+    roles: Role[];
+}>;
+
+export default function AccountsPage({ accounts }: AccountsPageProps) {
+    const { isOpen, onClose, onOpen, onOpenChange } = useDisclosure();
 
     const renderCell = React.useCallback(
         (user: UserModel, columnKey: React.Key) => {
@@ -84,7 +55,7 @@ export default function AccountsPage({
                     return (
                         <div className="flex flex-col">
                             <p className="text-bold text-small capitalize">
-                                {user.roles.map((role) => role.name).join(", ")}
+                                {user.roleNames.join(', ')}
                             </p>
                         </div>
                     );
@@ -112,7 +83,7 @@ export default function AccountsPage({
 
     return (
         <AuthenticatedLayout>
-            <Head title="Users" />
+            <Head title="Accounts" />
             <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
                 <div className="flex flex-col">
                     <div className="-m-1.5 overflow-x-auto">
@@ -130,100 +101,43 @@ export default function AccountsPage({
 
                                     <div>
                                         <div className="inline-flex gap-x-2">
-                                            <a
-                                                className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                                                href="#"
+                                            <Button
+                                                color="primary"
+                                                onPress={onOpen}
                                             >
-                                                <svg
-                                                    className="shrink-0 size-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="24"
-                                                    height="24"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                >
-                                                    <path d="M5 12h14" />
-                                                    <path d="M12 5v14" />
-                                                </svg>
-                                                Add user
-                                            </a>
+                                                <AiOutlinePlus />
+                                                Create Account
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
 
                                 <Table
-                                    aria-label="Users Table"
-                                    classNames={classNames}
-                                    removeWrapper
-                                >
-                                    <TableHeader
-                                        columns={columns}
-                                        className="rounded-none"
-                                    >
-                                        {(column) => (
-                                            <TableColumn
-                                                key={column.uid}
-                                                align={
-                                                    column.uid === "actions"
-                                                        ? "center"
-                                                        : "start"
-                                                }
-                                            >
-                                                <div className="flex items-center gap-x-2">
-                                                    <span className="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                        {column.name}
-                                                    </span>
-                                                </div>
-                                            </TableColumn>
-                                        )}
-                                    </TableHeader>
-                                    <TableBody items={accounts.data}>
-                                        {(item) => (
-                                            <TableRow key={item.id}>
-                                                {(columnKey) => (
-                                                    <TableCell>
-                                                        {renderCell(
-                                                            item,
-                                                            columnKey
-                                                        )}
-                                                    </TableCell>
-                                                )}
-                                            </TableRow>
-                                        )}
-                                    </TableBody>
-                                </Table>
-
-                                <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700">
-                                    <div>
-                                        <p className="text-sm text-gray-600 dark:text-neutral-400">
-                                            <span className="font-semibold text-gray-800 dark:text-neutral-200">
-                                                {accounts.total}
-                                            </span>{" "}
-                                            results
-                                        </p>
-                                    </div>
-
-                                    <Pagination
-                                        total={accounts.last_page}
-                                        page={accounts.current_page}
-                                        onChange={(page) =>
-                                            router.visit(
-                                                route("accounts.index") +
-                                                    "?page=" +
-                                                    page
-                                            )
-                                        }
-                                    />
-                                </div>
+                                    items={accounts.data}
+                                    columns={columns}
+                                    label="Accounts"
+                                    renderCell={renderCell}
+                                    total={accounts.total}
+                                    totalPage={accounts.last_page}
+                                    page={accounts.current_page}
+                                    onChangePage={(page) =>
+                                        router.visit(
+                                            route("accounts.index") +
+                                                "?page=" +
+                                                page
+                                        )
+                                    }
+                                />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <AccountFormModal
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+                onClose={onClose}
+            />
         </AuthenticatedLayout>
     );
 }

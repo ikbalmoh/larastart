@@ -1,5 +1,5 @@
 import defaultTheme from "tailwindcss/defaultTheme";
-import forms from "@tailwindcss/forms";
+// import forms from "@tailwindcss/forms";
 import { heroui } from "@heroui/react";
 
 /** @type {import('tailwindcss').Config} */
@@ -23,5 +23,5 @@ export default {
         },
     },
 
-    plugins: [forms, require("preline/plugin"), heroui()],
+    plugins: [require("preline/plugin"), heroui()],
 };

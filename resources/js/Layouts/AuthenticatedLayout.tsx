@@ -4,7 +4,8 @@ import Header from "./_Header";
 import Sidebar from "./_Sidebar";
 
 export default function AuthenticatedLayout({ children }: PropsWithChildren) {
-    const user = usePage().props.auth.user;
+    const { auth } = usePage().props;
+    const user = auth;
 
     useEffect(() => {
         window.HSStaticMethods.autoInit();
